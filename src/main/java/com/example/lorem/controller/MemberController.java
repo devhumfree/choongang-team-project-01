@@ -21,12 +21,14 @@ public class MemberController {
     }
 
     @PostMapping("/member/login")//로그인 된 상태로 사이트 이용가능하게 만들기
-    public String login(@ModelAttribute MemberDTO memberDTO, HttpSession session) {
+    public String login(@ModelAttribute MemberDTO memberDTO, HttpSession session, HttpServletRequest request) {
         MemberDTO loginResult = memberService.login(memberDTO);
         if (loginResult != null) {
             // login 성공
-            session.setAttribute("loginEmail", loginResult.getMemberEmail());
-            return "index";
+            System.out.println("memberDTO = " + memberDTO + ", session = " + session);
+            session = request.getSession();
+            session.setAttribute("loggedIn", true);
+            return "redirect:/";
         } else {
             // login 실패
             return "alert.msg";
